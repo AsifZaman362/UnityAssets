@@ -14,18 +14,20 @@ namespace Effects
 
             float rotCamX = Input.GetAxis("Mouse X") * sway_speed;
             float rotCamY = Input.GetAxis("Mouse Y") * sway_speed;
-            if (Mathf.Abs(rotCamX) > 20.0f)
+            if (Mathf.Abs(rotCamX) > maxSway)
             {
                 rotCamX = 20.0f * Mathf.Sign(rotCamX);
             }
-            if (Mathf.Abs(rotCamY) > 20.0f)
+            if (Mathf.Abs(rotCamY) > maxSway)
             {
                 rotCamY = 20.0f * Mathf.Sign(rotCamY);
             }
+            
             transform.Rotate(transform.up * rotCamX * -1);
             transform.Rotate(transform.right * rotCamY * -1);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, sway_speed/2.0f);
 
+            transform.rotation = Quaternion.Lerp(transform.rotation, Camera.main.transform.rotation, sway_speed / 2.5f);
+                        
         }
     }
 }

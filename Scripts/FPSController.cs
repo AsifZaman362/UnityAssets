@@ -13,19 +13,27 @@ namespace Controllers
         [Range(-1, 1)]
         public int y_invert = -1;
         public bool isDebug = true;
+        public bool lockMouse = false;
         public LayerMask object_layer;
 
         private Camera mainCam;
         private Rigidbody player;
-        private bool isRunning = false;
+
+        [HideInInspector]
+        public bool isRunning = false;
+        [HideInInspector]
+        public bool isWalking = false;
 
         void Start()
         {
 
             player = GetComponent<Rigidbody>();
             mainCam = Camera.main;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            if (lockMouse)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             player.constraints = RigidbodyConstraints.FreezeRotation;
 
         }
@@ -44,7 +52,7 @@ namespace Controllers
                 }
                 else if (Input.GetMouseButtonDown(0))
                 {
-                    if (Cursor.visible)
+                    if (Cursor.visible && lockMouse)
                     {
                         Cursor.visible = false;
                         Cursor.lockState = CursorLockMode.Locked;
@@ -61,6 +69,7 @@ namespace Controllers
             float moveY = move_speed * Input.GetAxis("Vertical");
 
             isRunning = Input.GetButton("Sprint") && moveY > 0.0F;
+            isWalking = !isRunning && (Mathf.Abs(moveY) > 0.0F || Mathf.Abs(moveX) > 0.0F);
             if (isRunning) moveY *= run_speed_multiplier;           
 
             Vector3 velocity = new Vector3(0, 0);
